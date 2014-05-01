@@ -50,6 +50,44 @@ describe "Creating Facilities"  do
 		visit "/facilities"
 		expect(page).to_not have_content("Description of facility.")
 	end
+
+	it "displays an error when the facility has no description" do
+		expect(Facility.count).to eq(0)
+
+		visit "/facilities"
+		click_link "New Facility"
+		expect(page).to have_content("New facility")
+	
+		fill_in "Title", with: "New Facility"
+		fill_in "Description", with: ""
+		click_button "Create Facility"
+
+		expect(page).to have_content("error")
+
+		expect(Facility.count).to eq(0)
+
+		visit "/facilities"
+		expect(page).to_not have_content("New facility")
+	end
+
+	it "displays an error when the facility has less than five letters in the description" do
+		expect(Facility.count).to eq(0)
+
+		visit "/facilities"
+		click_link "New Facility"
+		expect(page).to have_content("New facility")
+	
+		fill_in "Title", with: "New Facility"
+		fill_in "Description", with: "Desc"
+		click_button "Create Facility"
+
+		expect(page).to have_content("error")
+
+		expect(Facility.count).to eq(0)
+
+		visit "/facilities"
+		expect(page).to_not have_content("New facility")
+	end
 	
 	
 end
